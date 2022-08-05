@@ -9,6 +9,16 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  // create a TextEditingController
+  final _controller = TextEditingController();
+
+  // dispose it when the widget is unmounted
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,9 +63,11 @@ class _LoginState extends State<Login> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20.0),
                     child: TextField(
+                      controller: _controller,
                       decoration: InputDecoration(
                         border: InputBorder.none,
                         hintText: "Email",
+                        errorText: _errorText,
                       ),
                     ),
                   ),
@@ -128,5 +140,19 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  String? get _errorText {
+    // at any time, we can get the text from _controller.value.text
+    final text = _controller.value.text;
+
+    if (text.isEmpty) {
+      return 'Can\'t be empty';
+    }
+    if (text.length < 4) {
+      return 'Too short';
+    }
+    // return null if the text is valid
+    return null;
   }
 }
